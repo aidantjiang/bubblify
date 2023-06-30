@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-type Terms = "long_term" | "medium_term" | "short_term";
+import GenreChart from "@/components/GenreChart";
+import { cutDownGenres } from "../logic/genres";
+import { getTopArtists } from "../logic/api";
 
 interface UrlParams {
   [key: string]: string;
 }
 
-interface TopArtist {
+interface TopArtists {
   external_urls: {
     spotify: string;
   };
@@ -31,14 +32,18 @@ interface TopArtist {
   uri: string;
 }
 
+interface TopGenres {
+  [key: string]: number;
+}
+
 const Callback = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [tokenType, setTokenType] = useState<string | null>(null);
   const [expiresIn, setExpiresIn] = useState<number | null>(null);
-  const [topArtists, setTopArtists] = useState<TopArtist[] | undefined>(
+  const [topArtists, setTopArtists] = useState<TopArtists[] | undefined>(
     undefined
   );
-  const [topGenres, setTopGenres] = useState<any>(null);
+  const [topGenres, setTopGenres] = useState<TopGenres | undefined>(undefined);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const handleAccessToken = () => {
@@ -63,19 +68,6 @@ const Callback = () => {
     }
 
     return { accessToken, tokenType, expiresIn };
-  };
-
-  const getTopArtists = async (token: string, time_frame: Terms) => {
-    const response = await axios.get(
-      `https://api.spotify.com/v1/me/top/artists?time_range=${time_frame}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
-    return response.data.items;
   };
 
   const getPercentage = (num: number, total: number) => {
@@ -126,9 +118,8 @@ const Callback = () => {
     setExpiresIn(fragment.expiresIn);
 
     const fetchTopArtists = async () => {
-      if (accessToken) {
+      if (accessToken && topArtists == undefined) {
         await getTopArtists(accessToken, "medium_term").then((artists) => {
-          setMounted(true);
           setTopArtists(artists);
           console.log("data", artists);
         });
@@ -136,18 +127,30 @@ const Callback = () => {
     };
 
     fetchTopArtists();
-
-    if (mounted) {
-      console.log("topgenres", getTopGenres());
-    }
   }, [accessToken]);
+
+  useEffect(() => {
+    let genres = getTopGenres();
+    genres = cutDownGenres(genres);
+    console.log("updated genres", genres);
+    setTopGenres(genres);
+    console.log("topgenres", genres);
+    setMounted(true);
+  }, [topArtists]);
 
   return (
     <div>
-      {mounted ? (
-        topArtists?.map((artist) => <p key={artist.id}>{artist.name}</p>)
-      ) : (
-        <p>bye</p>
+      {!mounted && <p>loading</p>}
+      {mounted && (
+        <>
+          {topArtists?.map((artist) => (
+            <p key={artist.id}>{artist.name}</p>
+          ))}
+          <GenreChart
+            categories={Object.keys(topGenres as TopGenres)}
+            data={Object.values(topGenres as TopGenres)}
+          />
+        </>
       )}
     </div>
   );
