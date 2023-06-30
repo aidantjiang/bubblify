@@ -1,18 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { authEndpoint, clientId, redirectUri, scopes } from "./logic/api";
 
 export default function Home() {
-  const authEndpoint = "https://accounts.spotify.com/authorize";
-  const clientId = process.env.CLIENT_ID;
-  const redirectUri = process.env.REDIRECT_URI;
-  const scopes: string[] = [
-    "playlist-read-private",
-    "playlist-read-collaborative",
-    "user-library-read",
-    "user-top-read",
-    "user-read-private",
-  ];
-
   return (
     <main>
       <Link

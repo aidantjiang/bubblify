@@ -2,6 +2,69 @@ interface genreInterface {
     [key: string]: number;
 }
 
+export interface TopArtists {
+    external_urls: {
+      spotify: string;
+    };
+    followers: {
+      href: string | null;
+      total: number;
+    };
+    genres: string[];
+    href: string;
+    id: string;
+    images: {
+      height: number;
+      url: string;
+      width: number;
+    }[];
+    name: string;
+    popularity: number;
+    type: string;
+    uri: string;
+}
+
+const getPercentage = (num: number, total: number) => {
+    const rawPercentage = (num / total) * 100;
+    return Number(rawPercentage.toFixed(2));
+  };
+
+export const getTopGenres = (topArtists: TopArtists[]) => {
+    //VARIABLE DECLARATIONS
+    let genres: string[][] = [];
+    let totalGenreEntries: number = 0;
+    let genreCount: { [key: string]: number } = {};
+    let result: { [key: string]: number } = {};
+
+    //LIST ALL GENRES IN ARRAY
+    topArtists?.map((artist) => {
+      genres.push(artist.genres);
+    });
+
+    //COUNT INSTANCE OF EACH GENRE
+    for (let i = 0; i < genres.length; i++) {
+      for (let j = 0; j < genres[i].length; j++) {
+        const currentGenre: string = genres[i][j];
+        if (genreCount.hasOwnProperty(currentGenre)) {
+          genreCount[currentGenre] += 1;
+        } else {
+          genreCount[currentGenre] = 1;
+        }
+        totalGenreEntries++;
+      }
+    }
+
+    //MAKE ALL GENRE VALUES %'s OF TOTAL
+    result = genreCount;
+    for (let key in result) {
+      const value = getPercentage(result[key], totalGenreEntries);
+      result[key] = value;
+    }
+
+    //RETURN
+    return result;
+  };
+
 export const cutDownGenres = (genreObject: genreInterface) => {
     const genres = Object.keys(genreObject);
     let genreSimplificationOutput = {

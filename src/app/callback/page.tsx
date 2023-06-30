@@ -3,35 +3,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import GenreChart from "@/components/GenreChart";
-import { cutDownGenres } from "../logic/genres";
-import { getTopArtists } from "../logic/api";
+import { TopArtists, cutDownGenres, getTopGenres } from "../logic/genres";
+import { getPlaylists, getTopArtists } from "../logic/api";
+import { access } from "fs";
 
 interface UrlParams {
   [key: string]: string;
 }
-
-interface TopArtists {
-  external_urls: {
-    spotify: string;
-  };
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  genres: string[];
-  href: string;
-  id: string;
-  images: {
-    height: number;
-    url: string;
-    width: number;
-  }[];
-  name: string;
-  popularity: number;
-  type: string;
-  uri: string;
-}
-
 interface TopGenres {
   [key: string]: number;
 }
@@ -44,6 +22,7 @@ const Callback = () => {
     undefined
   );
   const [topGenres, setTopGenres] = useState<TopGenres | undefined>(undefined);
+  const [playlists, setPlaylists] = useState<any>(undefined);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const handleAccessToken = () => {
@@ -70,47 +49,6 @@ const Callback = () => {
     return { accessToken, tokenType, expiresIn };
   };
 
-  const getPercentage = (num: number, total: number) => {
-    const rawPercentage = (num / total) * 100;
-    return Number(rawPercentage.toFixed(2));
-  };
-
-  const getTopGenres = () => {
-    //VARIABLE DECLARATIONS
-    let genres: string[][] = [];
-    let totalGenreEntries: number = 0;
-    let genreCount: { [key: string]: number } = {};
-    let result: { [key: string]: number } = {};
-
-    //LIST ALL GENRES IN ARRAY
-    topArtists?.map((artist) => {
-      genres.push(artist.genres);
-    });
-
-    //COUNT INSTANCE OF EACH GENRE
-    for (let i = 0; i < genres.length; i++) {
-      for (let j = 0; j < genres[i].length; j++) {
-        const currentGenre: string = genres[i][j];
-        if (genreCount.hasOwnProperty(currentGenre)) {
-          genreCount[currentGenre] += 1;
-        } else {
-          genreCount[currentGenre] = 1;
-        }
-        totalGenreEntries++;
-      }
-    }
-
-    //MAKE ALL GENRE VALUES %'s OF TOTAL
-    result = genreCount;
-    for (let key in result) {
-      const value = getPercentage(result[key], totalGenreEntries);
-      result[key] = value;
-    }
-
-    //RETURN
-    return result;
-  };
-
   useEffect(() => {
     const fragment = handleAccessToken();
     setAccessToken(fragment.accessToken);
@@ -126,11 +64,21 @@ const Callback = () => {
       }
     };
 
+    const fetchPlaylists = async () => {
+      if (accessToken && playlists == undefined) {
+        await getPlaylists(accessToken).then((playlists) => {
+          setPlaylists(playlists);
+          console.log("playlists", playlists);
+        });
+      }
+    };
+
     fetchTopArtists();
+    fetchPlaylists();
   }, [accessToken]);
 
   useEffect(() => {
-    let genres = getTopGenres();
+    let genres = getTopGenres(topArtists as TopArtists[]);
     genres = cutDownGenres(genres);
     console.log("updated genres", genres);
     setTopGenres(genres);
