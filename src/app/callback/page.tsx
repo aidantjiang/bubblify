@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import GenreChart from "@/components/GenreChart";
 import { TopArtists, cutDownGenres, getTopGenres } from "../logic/genres";
-import { getPlaylists, getTopArtists } from "../logic/api";
+import { getPlaylistHrefs, getPlaylists, getTopArtists } from "../logic/api";
 import { access } from "fs";
 
 interface UrlParams {

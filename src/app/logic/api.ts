@@ -2,6 +2,10 @@ import axios from "axios";
 
 type Terms = "long_term" | "medium_term" | "short_term";
 
+interface ObjectType1 {
+    [key: string]: string;
+}
+
 export const authEndpoint = "https://accounts.spotify.com/authorize";
 export const clientId = process.env.CLIENT_ID;
 export const redirectUri = process.env.REDIRECT_URI;
@@ -28,18 +32,8 @@ export const getTopArtists = async (token: string, time_frame: Terms) => {
     };
 
 export const getPlaylists = async (token: string) => {
-    const response = await axios.get(
-        `https://api.spotify.com/v1/me/playlists`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-      return response.data.items;
-}
+    const hrefObject: ObjectType1 = {};
 
-export const getPlaylistHrefs = async (token: string) => {
     const response = await axios.get(
         `https://api.spotify.com/v1/me/playlists`,
         {
@@ -49,6 +43,31 @@ export const getPlaylistHrefs = async (token: string) => {
         }
       );
       const items = response.data.items;
+
+      for (let i = 0; i < items.length; i++) {
+        const playlistName = items[i].name
+        hrefObject[playlistName] = (items[i].tracks['href']);
+      }
+
+      return [items, hrefObject];
+}
+
+export const getPlaylistHrefs = async (token: string) => {
+    const hrefList = [];
+
+    const response = await axios.get(
+        `https://api.spotify.com/v1/me/playlists`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      const items = response.data.items;
+
+      for (let i = 0; i < items.length; i++) {
+        hrefList.push(items[i].tracks['href']);
+      }
 }
 
 //I LOVE YOU AXIOS!
