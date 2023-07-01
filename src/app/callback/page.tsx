@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import GenreChart from "@/components/GenreChart";
 import { TopArtists, cutDownGenres, getTopGenres } from "../logic/genres";
-import { getPlaylistHrefs, getPlaylists, getTopArtists } from "../logic/api";
+import { getPlaylistGenre, getPlaylists, getTopArtists } from "../logic/api";
 import { access } from "fs";
 
 interface UrlParams {
@@ -66,9 +65,37 @@ const Callback = () => {
 
     const fetchPlaylists = async () => {
       if (accessToken && playlists == undefined) {
-        await getPlaylists(accessToken).then((playlists) => {
-          setPlaylists(playlists);
-          console.log("playlists", playlists);
+        await getPlaylists(accessToken).then(async (playlistsObj) => {
+          console.log("playlistsObj", playlistsObj);
+
+          const playlistKeys = Object.keys(playlistsObj);
+
+          for (const playlistKey of playlistKeys) {
+            const playlistUrl = playlistsObj[playlistKey];
+            if (playlistKey == "flow") {
+              //DELETE LATER!
+              await getPlaylistGenre(accessToken, playlistUrl)
+                .then((response) => {
+                  // Process the response from the Spotify API
+                  console.log(
+                    "Genre response for playlist",
+                    playlistKey,
+                    ":",
+                    response
+                  );
+                  // Add your code here to handle the response
+                })
+                .catch((error) => {
+                  // Handle any errors that occur during the API request
+                  console.error(
+                    "Error retrieving playlist genre for",
+                    playlistKey,
+                    ":",
+                    error
+                  );
+                });
+            }
+          } //DELETE LATER!
         });
       }
     };
@@ -78,14 +105,12 @@ const Callback = () => {
   }, [accessToken]);
 
   useEffect(() => {
-    let genres = getTopGenres(topArtists as TopArtists[]);
+    let genres = getTopGenres(topArtists as TopArtists[], true);
     genres = cutDownGenres(genres);
-    console.log("updated genres", genres);
     setTopGenres(genres);
-    console.log("topgenres", genres);
+    console.log("updated topgenres", genres);
     setMounted(true);
   }, [topArtists]);
-
   return (
     <div>
       {!mounted && <p>loading</p>}

@@ -24,12 +24,22 @@ export interface TopArtists {
     uri: string;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//GETTOPGENRES() HELPERS
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const getPercentage = (num: number, total: number) => {
     const rawPercentage = (num / total) * 100;
     return Number(rawPercentage.toFixed(2));
-  };
+};
 
-export const getTopGenres = (topArtists: TopArtists[]) => {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//TODO: STANDARDIZE SCALE
+
+export const getTopGenres = (topArtists: TopArtists[] | string[][], turnIntoStringArray: boolean = false) => {
     //VARIABLE DECLARATIONS
     let genres: string[][] = [];
     let totalGenreEntries: number = 0;
@@ -37,9 +47,15 @@ export const getTopGenres = (topArtists: TopArtists[]) => {
     let result: { [key: string]: number } = {};
 
     //LIST ALL GENRES IN ARRAY
-    topArtists?.map((artist) => {
-      genres.push(artist.genres);
-    });
+    if (turnIntoStringArray) {
+      topArtists?.map((artist) => {
+        if (typeof artist === 'object' && artist !== null && 'genres' in artist) {
+          genres.push(artist.genres);
+        }
+      });
+    } else {
+      genres = topArtists as string[][];
+    }
 
     //COUNT INSTANCE OF EACH GENRE
     for (let i = 0; i < genres.length; i++) {
