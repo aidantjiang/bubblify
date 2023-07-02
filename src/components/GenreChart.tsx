@@ -11,21 +11,36 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 
 interface IProps {
   categories: string[];
-  data: number[];
+  data: number[] | number[][];
 }
 
 //RADAR CHART HAPPENS BELOW, HOWEVER I DO IT!
 const GenreChart = (props: IProps) => {
+  const turnDataInSeries = (data: number[][]) => {
+    let dataArr = [];
+    for (let i = 0; i < data.length; i++) {
+      dataArr.push({
+        name: `Series ${i}`,
+        data: data[i],
+      });
+    }
+
+    return dataArr;
+  };
+
+  console.log("testing", turnDataInSeries(props.data as number[][]));
+
   const chart: ApexOptions = {
     chart: {
       type: "radar",
     },
-    series: [
-      {
-        name: "Series 1",
-        data: props.data,
-      },
-    ],
+    series: turnDataInSeries(props.data as number[][]),
+    // series: [
+    //   {
+    //     name: "test",
+    //     data: props.data,
+    //   },
+    // ],
     title: {
       text: "Basic Radar Chart",
     },

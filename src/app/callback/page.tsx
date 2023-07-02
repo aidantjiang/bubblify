@@ -13,6 +13,18 @@ interface TopGenres {
   [key: string]: number;
 }
 
+const sampleData = {
+  alternative: 20,
+  hiphop: 20,
+  indie: 20,
+  jazz: 20,
+  metal: 20,
+  other: 20,
+  pop: 20,
+  rap: 20,
+  rock: 20,
+};
+
 const Callback = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [tokenType, setTokenType] = useState<string | null>(null);
@@ -20,8 +32,8 @@ const Callback = () => {
   const [topArtists, setTopArtists] = useState<TopArtists[] | undefined>(
     undefined
   );
-  const [topGenres, setTopGenres] = useState<TopGenres | undefined>(undefined);
-  const [playlists, setPlaylists] = useState<any>(undefined);
+  const [topGenres, setTopGenres] = useState<TopGenres>(sampleData);
+  const [playlists, setPlaylists] = useState<TopGenres>(sampleData);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const handleAccessToken = () => {
@@ -64,7 +76,7 @@ const Callback = () => {
     };
 
     const fetchPlaylists = async () => {
-      if (accessToken && playlists == undefined) {
+      if (accessToken) {
         await getPlaylists(accessToken).then(async (playlistsObj) => {
           console.log("playlistsObj", playlistsObj);
 
@@ -72,7 +84,11 @@ const Callback = () => {
 
           for (const playlistKey of playlistKeys) {
             const playlistUrl = playlistsObj[playlistKey];
-            if (playlistKey == "flow") {
+            if (
+              playlistKey == "mix" ||
+              playlistKey == "lax" ||
+              playlistKey == "flow"
+            ) {
               //DELETE LATER!
               await getPlaylistGenre(accessToken, playlistUrl)
                 .then((response) => {
@@ -84,6 +100,9 @@ const Callback = () => {
                     response
                   );
                   // Add your code here to handle the response
+                  if (response !== undefined) {
+                    setPlaylists(response);
+                  }
                 })
                 .catch((error) => {
                   // Handle any errors that occur during the API request
@@ -109,8 +128,11 @@ const Callback = () => {
     genres = cutDownGenres(genres);
     setTopGenres(genres);
     console.log("updated topgenres", genres);
-    setMounted(true);
   }, [topArtists]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, [playlists]);
   return (
     <div>
       {!mounted && <p>loading</p>}
@@ -121,7 +143,10 @@ const Callback = () => {
           ))}
           <GenreChart
             categories={Object.keys(topGenres as TopGenres)}
-            data={Object.values(topGenres as TopGenres)}
+            data={[
+              Object.values(topGenres as TopGenres),
+              Object.values(playlists),
+            ]}
           />
         </>
       )}

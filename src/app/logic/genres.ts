@@ -1,5 +1,5 @@
-interface genreInterface {
-    [key: string]: number;
+export interface genreInterface {
+  [key: string]: number;
 }
 
 export interface TopArtists {

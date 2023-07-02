@@ -54,6 +54,7 @@ export const getPlaylists = async (token: string) => {
 }
 
 export const getPlaylistGenre = async (token: string, apiurl: string) => {
+  let exportGenreEnd;
   let artistIdArray: string[] = [];
 
   const response = await axios.get(
@@ -90,9 +91,9 @@ export const getPlaylistGenre = async (token: string, apiurl: string) => {
     //   maxArtistApiCount = 50;
     // }
   }
-  console.log('artistIdArray', artistIdArray)
-  getArtistGenres(token, artistIdArray, true).then((genres) => {
+  await getArtistGenres(token, artistIdArray, true).then((genres) => {
         console.log('50 artist genres', genres);
+        exportGenreEnd = genres;
         artistIdArray = [];
       });
   // if (trackIdArray.length > 0) {
@@ -100,7 +101,7 @@ export const getPlaylistGenre = async (token: string, apiurl: string) => {
   //     console.log('50 album genres', genres);
   //   })
   // }
-  return items;
+  return exportGenreEnd;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
