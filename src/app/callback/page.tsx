@@ -33,7 +33,7 @@ const Callback = () => {
     undefined
   );
   const [topGenres, setTopGenres] = useState<TopGenres>(sampleData);
-  const [playlists, setPlaylists] = useState<TopGenres>(sampleData);
+  const [playlists, setPlaylists] = useState<TopGenres[]>([]);
   const [mounted, setMounted] = useState<boolean>(false);
 
   const handleAccessToken = () => {
@@ -81,6 +81,7 @@ const Callback = () => {
           console.log("playlistsObj", playlistsObj);
 
           const playlistKeys = Object.keys(playlistsObj);
+          let playlistsToAdd: TopGenres[] = [];
 
           for (const playlistKey of playlistKeys) {
             const playlistUrl = playlistsObj[playlistKey];
@@ -101,7 +102,7 @@ const Callback = () => {
                   );
                   // Add your code here to handle the response
                   if (response !== undefined) {
-                    setPlaylists(response);
+                    playlistsToAdd.push(response);
                   }
                 })
                 .catch((error) => {
@@ -115,6 +116,7 @@ const Callback = () => {
                 });
             }
           } //DELETE LATER!
+          setPlaylists(playlistsToAdd);
         });
       }
     };
@@ -143,10 +145,7 @@ const Callback = () => {
           ))}
           <GenreChart
             categories={Object.keys(topGenres as TopGenres)}
-            data={[
-              Object.values(topGenres as TopGenres),
-              Object.values(playlists),
-            ]}
+            data={[Object.values(topGenres as TopGenres), playlists]}
           />
         </>
       )}

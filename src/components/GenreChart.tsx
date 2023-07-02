@@ -1,5 +1,6 @@
 "use client";
 
+import { genreInterface } from "@/app/logic/genres";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { Suspense, useEffect, useState } from "react";
@@ -9,32 +10,45 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   loading: () => <div>Loading</div>, // Replace <Loading /> with your custom loading component
 });
 
+type IData = [number[], genreInterface[]];
+
 interface IProps {
   categories: string[];
-  data: number[] | number[][];
+  data: IData;
 }
 
 //RADAR CHART HAPPENS BELOW, HOWEVER I DO IT!
 const GenreChart = (props: IProps) => {
-  const turnDataInSeries = (data: number[][]) => {
+  const turnDataInSeries = (data: IData) => {
+    console.log("RFEAD!!!!!!!!", data);
     let dataArr = [];
     for (let i = 0; i < data.length; i++) {
-      dataArr.push({
-        name: `Series ${i}`,
-        data: data[i],
-      });
+      if (i == 0) {
+        dataArr.push({
+          name: `Series ${i}`,
+          data: data[i],
+        });
+      } else if (i == 1) {
+        for (let j = 0; j < data[i].length; j++) {
+          let playlistGenreValues = Object.values(data[i][j]);
+          dataArr.push({
+            name: `Series ${i}-${j}`,
+            data: playlistGenreValues,
+          });
+        }
+      }
     }
 
     return dataArr;
   };
 
-  console.log("testing", turnDataInSeries(props.data as number[][]));
+  console.log("testing", turnDataInSeries(props.data));
 
   const chart: ApexOptions = {
     chart: {
       type: "radar",
     },
-    series: turnDataInSeries(props.data as number[][]),
+    series: turnDataInSeries(props.data),
     // series: [
     //   {
     //     name: "test",
