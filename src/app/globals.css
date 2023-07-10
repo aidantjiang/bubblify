@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'ms-sans-8pt';
+    src: url('../../public/fonts/ms-sans-8.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'ms-sans-8pt-bold';
+    src: url('../../public/fonts/ms-sans-bold-8.ttf');
+    font-weight: 800;
+}
+
+.retro-normal {
+    font-family: 'ms-sans-8pt';
+}
+
+.retro-bold {
+    font-family: 'ms-sans-8pt-bold';
+}
