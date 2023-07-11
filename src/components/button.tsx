@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./button.module.css";
 
 interface IProps {
   text: string;
@@ -12,10 +13,14 @@ const RetroButton = ({ text, link = false, url = "" }: IProps) => {
       {text}
     </Link>
   ) : (
-    <p>{text}</p>
+    <p className={styles.noStyling}>{text}</p>
   );
 
-  return <div className="retro-bold">{content}</div>;
+  return (
+    <div className="retro-bold">
+      <div className={styles.main}>{content}</div>
+    </div>
+  );
 };
 
 export default RetroButton;
