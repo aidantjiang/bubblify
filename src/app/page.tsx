@@ -29,7 +29,16 @@ export default function Home() {
       </div>
       <div className={`${styles.fullscreen}`}>
         <RetroButton text={"log in"} link={true} url={redirectTo} />
-        <RetroButton text={"about the creator"} />
+        <RetroButton
+          text={"about the creator"}
+          modalText={[
+            "aidan jiang",
+            "high schooler",
+            "insta: @aidantjiang",
+            "boulder co",
+            "lorum ipsum dolor it colorium",
+          ]}
+        />
       </div>
     </main>
   );

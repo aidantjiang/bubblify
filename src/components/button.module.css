@@ -1,4 +1,4 @@
-.main {
+.button {
     display: inline-block;
     padding: 10px;
     border-radius: 5px;
@@ -9,7 +9,7 @@
     color: black;
 }
 
-.main:hover {
+.button:hover {
     box-shadow: var(--shadow-hover);
     animation: move 0.5s;
 }
