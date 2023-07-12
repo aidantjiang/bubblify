@@ -1,5 +1,9 @@
+"use client";
+
 import styles from "./popup.module.css";
 import Image from "next/image";
+import useSound from "use-sound";
+import closeSfx from "public/sounds/close.wav";
 
 interface IProps {
   modalText: string[];
@@ -9,6 +13,8 @@ interface IProps {
 }
 
 const PopUp = ({ modalText, change }: IProps) => {
+  const [closeSound] = useSound(closeSfx);
+
   const modalHeader: string = modalText[0];
   const modalBody = [];
   for (let i = 1; i < modalText.length; i++) {
@@ -21,14 +27,15 @@ const PopUp = ({ modalText, change }: IProps) => {
         <div className={`${styles.main}`}>
           <div className={`${styles.header} retro-bold`}>{modalHeader}</div>
           <div className={`${styles.body} ${styles.flex} retro-normal`}>
-            {modalBody.map((text) => {
-              return <div>{text}</div>;
+            {modalBody.map((text, index) => {
+              return <div key={index}>{text}</div>;
             })}
           </div>
           <div
             className={`${styles.close}`}
             onClick={() => {
               change();
+              closeSound();
             }}
           >
             <Image
