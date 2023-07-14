@@ -136,7 +136,7 @@ const Callback = () => {
     setMounted(true);
   }, [playlists]);
   return (
-    <div>
+    <div className={"retro-normal"}>
       {!mounted && <p>loading</p>}
       {mounted && (
         <>

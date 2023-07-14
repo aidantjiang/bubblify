@@ -1,0 +1,30 @@
+.button {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: #F5F5DC;
+    box-shadow: var(--shadow);
+    border: 1px solid black;
+    color: black;
+}
+
+.button:hover {
+    box-shadow: var(--shadow-hover);
+    animation: move 0.5s;
+}
+
+@keyframes move {
+    0% {
+        transform: translateY(5px);
+    }
+    100% {
+
+    }
+}
+
+.noStyling {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}

@@ -1,0 +1,34 @@
+:root {
+    --shadow: 0.3rem 0.3rem 0 rgba(29, 30, 28, 0.26);
+    --shadow-hover: 0.2rem 0.2rem 0 rgba(29, 30, 28, 0.26);
+}
+
+body,html {
+    margin: 0;
+    padding: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'ms-sans-8pt';
+    src: url('../../public/fonts/ms-sans-8.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'ms-sans-8pt-bold';
+    src: url('../../public/fonts/ms-sans-bold-8.ttf');
+    font-weight: 800;
+}
+
+.retro-normal {
+    font-family: 'ms-sans-8pt';
+}
+
+.retro-bold {
+    font-family: 'ms-sans-8pt-bold';
+}

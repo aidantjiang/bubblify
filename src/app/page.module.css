@@ -1,0 +1,59 @@
+.fullscreen {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1%;
+    justify-content: center;
+    flex-direction: row;
+    z-index: 101;
+}
+
+.bg {
+    position: absolute;
+    width: 120vw;
+    height: 120vh;
+    background-image: radial-gradient(circle at 1px 1px, black 1px, transparent 0);
+    background-size: 30px 30px;
+    background-position: -50px -50px;
+    animation: jumpAround 2s infinite;
+}
+
+.nonPriority {
+    z-index: 100;
+}
+
+.onePage {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    background-color: #E3CCAE;
+}
+
+.title {
+    display: flex;
+    height: 50vh;
+    width: 100vw;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 5rem;
+}
+
+.subtitle {
+    font-size: 2rem;
+}
+
+@keyframes jumpAround {
+    0% {
+        transform: translateX(-30px);
+    }
+
+    100% {
+        transform: translateY(-30px);
+    }
+
+}
