@@ -16,8 +16,8 @@
     animation: spin 3s infinite linear;
 }
 
-.reverseSpin {
-    animation: backwardsSpin 1s forwards;
+.pause {
+    animation-play-state: paused;
 }
 
 @keyframes spin {
@@ -27,15 +27,5 @@
 
     100% {
         transform: translate(-50%, -50%) rotate(-360deg);
-    }
-}
-
-@keyframes backwardsSpin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) rotate(30deg);
     }
 }

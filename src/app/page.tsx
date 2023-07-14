@@ -3,6 +3,7 @@ import { authEndpoint, clientId, redirectUri, scopes } from "./logic/api";
 import RetroButton from "@/components/button";
 import styles from "./page.module.css";
 import Vinyl from "@/components/vinyl";
+import Settings from "@/components/settings";
 
 export default function Home() {
   const redirectTo: string = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
@@ -14,6 +15,7 @@ export default function Home() {
       {/* /* STATIC ICONS/BGS */}
       <div className={`${styles.bg} ${styles.nonPriority}`} />
       <Vinyl />
+      <Settings />
       {/* /* ACTUAL STUFF */}
       <div className={`${styles.title}`}>
         <div>Mixify</div>
