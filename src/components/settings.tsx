@@ -4,8 +4,14 @@ import Image from "next/image";
 import styles from "./settings.module.css";
 import { useState } from "react";
 
+import useSound from "use-sound";
+import creakSfx from "public/sounds/creak.wav";
+import closeSfx from "public/sounds/close.wav";
+
 const Settings = () => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [playCreak] = useSound(creakSfx);
+  const [playClose] = useSound(closeSfx);
 
   return (
     <div>
@@ -13,6 +19,7 @@ const Settings = () => {
         className={`${styles.icon}`}
         onClick={() => {
           setVisible(true);
+          playCreak();
         }}
       >
         <Image
@@ -28,6 +35,7 @@ const Settings = () => {
             className={`${styles.close}`}
             onClick={() => {
               setVisible(false);
+              playClose();
             }}
           >
             <Image
